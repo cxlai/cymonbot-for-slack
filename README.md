@@ -2,7 +2,7 @@
 Slack bot based on Cymon's Python API. Looks up information about IP addresses and more.
 
 ## About
-[Cymon](http://www.cymon.io) aggregates threat sournces into a single interface. Cymonbot is a Slack bot written in Python that can be invited to any channel. While online, users can ask Cymonbot (Cymon Says) for security information about IP addresses, such as recent security events related to an IP address and domains associated with an IP address. With this information, users can be more informed about the trustworthiness of IP addresses and internet traffic. With information comes more power! 
+[Cymon](http://www.cymon.io) aggregates threat sournces into a single interface. Cymonbot is a Slack bot written in Python that pulls information from Cymon. Cymonbot can be invited to any channel. While it's online, users can ask Cymonbot (Cymon Says) for security information about IP addresses, such as recent security events related to an IP address and domains associated with an IP address. With this information, users can be more informed about the trustworthiness of IP addresses and internet traffic. With information comes more power for the users! 
 
 ## Requirements
 * A server with Python 3.* and the Python packages in `requirements.txt` installed. 

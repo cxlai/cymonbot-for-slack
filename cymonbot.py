@@ -15,7 +15,35 @@ def request_error_handler(e):
 # handling messages based on the type of error from requests module.
     res = "I can't fulfill your request. Cymon says:\n"
     res += str(e)
+    res += "\nTry a different IP address."
     return res
+
+def at_bot(message, botid):
+# Parse message to see if it's directed at Cymonbot and return
+# command if it is.
+    command = None
+    if message and len(message) > 0:
+        if botid in message:
+            command = message.split(botid)[1].lower()
+            try:
+                command = command.split("> ")[1]
+            except:
+                #This occurs when there is no text after mentioning Cymonbot.
+                command = ""
+    return command
+
+def process(command): 
+# Use whitespace to split command into task and info
+# i.e. the command and the IP address or tag..
+    words = command.split()
+    n = len(words)
+    if (n==1):
+        (task, info) = (words[0], None)
+    elif (n==2):
+        (task, info) = (words[0], words[1])
+    else:
+        (task, info) = (None, None)
+    return (task, info)
 
 def do_task(task, info):
 # Takes a task in format specified by bot's introduction and completes lookup
@@ -26,7 +54,7 @@ def do_task(task, info):
         res = ""
         if (task == "help" or task in greetings):
             res = '''Hi! I'm a bot that can give you relevant security information on IP addresses. My commands are:
-            - `iplookup [IP address]`: returns when the address was created and its sources
+            - `iplookup [IP address]`: returns when the address was created and the information sources 
             - `ipevents [IP address]`: returns any security events associated with the IP address
             - `ipdomains [IP address]`: returns any domains associated with the IP address
             - `ipurls [IP address]`: returns any URLs associated with the IP address
@@ -34,8 +62,8 @@ def do_task(task, info):
                (`malware`, `botnet`, `spam`, `phishing`, `malicious activity`, `blacklist`, `dnsbl`)\n'''
         elif (task == "iplookup"):
             r = api.ip_lookup(info)
-            res = "This IP address was created "+r["created"]+" and last"+\
-            " updated on "+r["updated"]+". It has the following sources:\n"
+            res = "This IP address was created "+r["created"][:len(r["created"])-1]+" and last"+\
+            " updated on "+r["updated"][:len(r["updated"])-1]+". It has information from the following sources:\n"
             for source in r["sources"]:
                 res += source
                 res += "\n"
@@ -56,7 +84,7 @@ def do_task(task, info):
                 res = "Here are all the domains associated with "+info+\
                 " based on Cymon's databases.\n"
                 for result in r["results"]:
-                    res += result["name"]+" created on "+result["created"]+"."
+                    res += result["name"]+" created on "+result["created"][:len(result["created"])-1]+"."
                     res += "\n"
             else:
                 res = "There are no domains associated with this IP address.\n"
@@ -66,7 +94,7 @@ def do_task(task, info):
                 res = "Here are all the URLs associated with "+info+\
                 " based on Cymon's databases.\n"
                 for result in r["results"]:
-                    res += result["location"]+" created on "+result["created"]+"."
+                    res += result["name"]+" created on "+result["created"][:len(result["created"])-1]+"."
                     res += "\n"
             else:
                 res = "There are no URLs associated with this IP address.\n"
@@ -87,29 +115,7 @@ def do_task(task, info):
     except: 
         return "Sorry, I can't do that. Ask me for 'help' and I'll give you instructions!"
 
-def at_bot(message, botid):
-# Parse message to see if it's directed at Cymonbot and return
-# command if it is.
-    command = None
-    if message and len(message) > 0:
-        if botid in message:
-            command = message.split(botid)[1].strip().lower()
-    return command
-
-def process(command): 
-# Use whitespace to split command into task and info (IP address to look up
-# using Cymon's API.
-    words = command.split()[1:]
-    n = len(words)
-    if (n==1):
-        (task, info) = (words[0], None)
-    elif (n==2):
-        (task, info) = (words[0], words[1])
-    else:
-        (task, info) = (None, None)
-    return (task, info)
-
-def main():i
+def main():
 # Connect to Slack client using bot token (sets Cymonbot to 'online').
 # Then waits for any direct mentions to @cymonbot and responds with either
 # a help message, command fulfillment, or suggestions for valid commands if
@@ -132,7 +138,7 @@ def main():i
                 if not message or not user:
                     continue
                 command = at_bot(message, BOT_ID)
-                if command:
+                if (command is not None):
                     (task, info) = process(command)
                     if (task is None):
                         sc.rtm_send_message(CHANNEL_NAME, "Sorry, I don't understand that. Ask me for 'help' if you need it.")
