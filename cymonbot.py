@@ -1,3 +1,13 @@
+'''
+cymonbot.py handles messages directed to the bot user (based on ID) and 
+responds if possible. If it is a command Cymonbot can fulfill, it does so
+using Cymon's Python API. It can also explain its own usage methods.
+
+The commands Cymonbot can handle are IP Lookup, IP Events, IP Domains, IP URLs,
+and IP Blacklists. More documentation on these API requests can be found at
+http://docs.cymon.io/v1/#apis. 
+'''
+
 import os
 import requests
 from cymon import Cymon
@@ -34,7 +44,7 @@ def at_bot(message, botid):
 
 def process(command): 
 # Use whitespace to split command into task and info
-# i.e. the command and the IP address or tag..
+# i.e. the command and the IP address or tag.
     words = command.split()
     n = len(words)
     if (n==1):
