@@ -74,7 +74,7 @@ def do_task(task, info):
                 " based on Cymon's databases.\n"
                 for result in r["results"]:
                     res += result["title"]+" on basis of "+result["tag"]+"."
-                    if result["description"]: res += result["description"]
+                    if result["description"]: res += "\n"+result["description"]+"\n"
                     res += "\n"
             else:
                 res = "There are no security events associated with this IP address."

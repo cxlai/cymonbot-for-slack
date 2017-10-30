@@ -29,3 +29,7 @@ While Cymonbot is running, mention `@cymonbot` with the following commands:
 * `ipdomains [IP address]`: returns any domains associated with the IP address
 * `ipurls [IP address]`: returns any URLs associated with the IP address
 * `ipblacklist [tag]`: returns IP addresses blacklisted in the past day based on the tag (options are `malware`, `botnet`, `spam`, `phishing`, `malicious activity`, `blacklist`, `dnsbl`)
+
+Here's an example! 
+
+![Example of using Cymonbot in Slack](https://raw.githubusercontent.com/cxlai/cymonbot-for-slack/master/example.png)
